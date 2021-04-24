@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>imitation-zhihu</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+<body>
+    <div id="app">
+        <div class="head">
+            <div @click="itemClick(index)" v-for="(item,index) in headsList" :data-index="index" :key="index" :class="'tab ' + (index == choose?'itemChoose':'')">
+                {{item}}
+                <div v-if="index == choose" class="line"></div>
+            </div>
+        </div>
+        <div class="content" ref="contentList" @scroll="scrollContent">
+            <div class="content-card" v-for="(item,index) in viewList" :key="index">
+                <span class="title"> {{item.title}} </span>
+                <div class="head">
+                    <img :src="item.authorImg" />
+                    <span class="author">{{item.author}}</span>
+                </div>
+                <img class="bg" :src="item.bg" alt="" />
+                <span class="text">{{item.text}}</span>
+                <div class="count">
+                    <span class="play">{{item.playSum}}万播放</span>
+                    <span class="love">{{item.love}}点赞</span>
+                </div>
+            </div>
+            <span>加载中...</span>
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    var app = new Vue({
+        el: '#app',
+        created() {
+            this.itemClick(0)
+        },
+        data: {
+            headsList: ['关注', '推荐', '热榜', '影视', '知识'],
+            choose: 0,
+            viewList: [],
+            isLoading: false,
+            //   模拟网络得到的数据
+            dataList: [{
+                title: '水下风景更靓丽',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=2496571732,442429806&fm=26&gp=0.jpg',
+                text: '夕阳下的风景,更配美丽的你',
+                playSum: 12,
+                love: 20,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '有你的时候,在哪都不无聊!',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3365503159,1655500687&fm=26&gp=0.jpg',
+                author: '贵妃醉酒',
+                bg: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3566088443,3713209594&fm=26&gp=0.jpg',
+                text: '和你坐车,窗外风景比不上你的温情',
+                playSum: 32,
+                love: 311,
+                mode: 0
+            }, {
+                title: '啦啦啦啦啦啦啦',
+                authorImg: 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=395380977,272417941&fm=26&gp=0.jpg',
+                author: '方法',
+                bg: 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=480941639,3775135897&fm=26&gp=0.jpg',
+                text: '范德萨范德萨',
+                playSum: 12,
+                love: 20,
+                mode: 1
+            }, {
+                title: '有fdaf!',
+                authorImg: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcdn.homekoo.com%2Fhuxing_fangan%2Fimages2011%2F2011_11%2F02%2F22222_01_2.jpg&refer=http%3A%2F%2Fcdn.homekoo.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621863790&t=45601bc92ccb29b14484181dd8553b42',
+                author: 'gfd',
+                bg: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fup.enterdesk.com%2Fedpic_360_360%2F3c%2Ffd%2F91%2F3cfd91a404054bcf941b9948e5e6fcd1.jpg&refer=http%3A%2F%2Fup.enterdesk.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621864088&t=389070055b3a901e757cdd85e7b44a11',
+                text: 'gda,gda',
+                playSum: 32,
+                love: 311,
+                mode: 1
+            }]
+        },
+        methods: {
+            itemClick(mode) {
+                this.choose = mode
+                this.viewList = this.dataList.filter((item) => item.mode === mode)
+            },
+            scrollContent(e) {
+                //可用Intersection Observer优化 
+                if (e.srcElement.scrollTop + e.srcElement.clientHeight >= e.srcElement.scrollHeight - 2) {
+                    //模拟网络请求数据
+                    setTimeout(() => {
+                        this.viewList.push({
+                            title: '范德萨',
+                            authorImg: 'https://pic1.zhimg.com/v2-9bc2b469f1bf4e7646b37a209cd0bdec_xl.jpg',
+                            author: '懒加载',
+                            bg: 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fcms.xitek.com%2Falbum%2F2011%2F10%2F19%2F4947145741750727478%2F4946909868286311363.jpg&refer=http%3A%2F%2Fcms.xitek.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1621866578&t=18927f79ac24e2ad2c0dfa045991cb77',
+                            text: '123,34',
+                            playSum: 12,
+                            love: 20,
+                            mode: 0
+                        })
+                    }, 1000)
+                }
+            }
+        }
+    })
+</script>
+<style>
+    html,
+    body,
+    #app {
+        height: 100%;
+        width: 100%;
+        background-color: rgb(243, 242, 242);
+        margin: 0;
+        padding: 0;
+    }
+    
+    #app>.head {
+        background-color: white;
+        box-shadow: 0px 1px 2px #888888;
+        width: 100%;
+        height: 8%;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        overflow: auto;
+    }
+    
+    .head .tab {
+        height: 50%;
+        margin-left: 20px;
+        font-weight: bold;
+        color: gray;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .head .line {
+        margin-top: 2px;
+        width: 10px;
+        height: 2px;
+        background-color: rgb(0, 91, 175);
+    }
+    
+    .head .itemChoose {
+        color: black;
+    }
+    /* ------- */
+    
+    .content {
+        width: 100%;
+        height: 91%;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .content .content-card {
+        width: 95%;
+        background-color: white;
+        margin: 5px;
+        border-radius: 5px;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .content .content-card .title {
+        font-weight: bold;
+        color: black;
+        font-size: 18px;
+    }
+    
+    .content .content-card .head {
+        display: flex;
+        font-weight: bold;
+        color: rgb(94, 94, 94);
+    }
+    
+    .content .content-card .head img {
+        width: 24px;
+        height: 24px;
+        border-radius: 100%;
+        margin-right: 20px;
+    }
+    
+    .content .content-card .bg {
+        border-radius: 10px;
+        height: 240px;
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    @media (min-width: 1080px) {
+        .content .content-card .bg {
+            border-radius: 10px;
+            height: 540px;
+            width: 100%;
+            margin-top: 10px;
+        }
+    }
+    
+    .content .content-card .text {
+        font-size: 14px;
+        margin-top: 5px;
+    }
+    
+    .content .content-card .count {
+        display: flex;
+        color: rgb(179, 179, 179);
+        font-size: 14px;
+        margin-top: 5px;
+    }
+</style>
